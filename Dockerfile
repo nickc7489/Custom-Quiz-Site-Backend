@@ -1,6 +1,27 @@
-FROM python:3.8-alpine
-ARG PYTHONBUFFERED 1
-WORKDIR /quiz_handler
-COPY requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
-COPY . .
+ARG PYTHON_VERSION=3.11-slim
+
+FROM python:${PYTHON_VERSION}
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+RUN mkdir -p /code
+
+WORKDIR /code
+
+COPY requirements.txt /tmp/requirements.txt
+RUN set -ex && \
+    pip install --upgrade pip && \
+    pip install -r /tmp/requirements.txt && \
+    rm -rf /root/.cache/
+COPY . /code
+
+RUN apt-get update && apt-get install -y \
+    sqlite3 \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN chmod +x startup.sh
+
+EXPOSE 8000
+
+ENTRYPOINT ["./startup.sh"]

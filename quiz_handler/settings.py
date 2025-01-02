@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +22,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^ah_0+ni))$4^$gwg1+sw!pz9)0uu(^(#v+x4*r*0kmrm2(ibm'
+SECRET_KEY = '^ah_0+ni))$4^$gSQ#$wg1+sw!pz9)031JSDuu(^(#v+x4*r*@!!64364T0kmrmdwAFhrnstQVE2(ibm'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_SECURE = True
+
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -118,10 +123,11 @@ WSGI_APPLICATION = 'quiz_handler.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default='sqlite:////data/db.sqlite3',
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 
